@@ -20,9 +20,9 @@ typedef enum e_runstate
 }	t_runstate;
 
 # define INIT_NONE 0
-# define INIT_MLX 2
-# define INIT_WIN 4
-# define INIT_IMG 16
+# define INIT_MLX 1
+# define INIT_WIN 2
+# define INIT_IMG 4
 # define INIT_
 
 /* ---------- Types basiques utilitaires ---------- */
