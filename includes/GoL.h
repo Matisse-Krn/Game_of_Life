@@ -162,7 +162,8 @@ typedef struct s_app
 /* ---------- Prototypes majeurs ---------- */
 
 /* init / teardown */
-// int   app_init(t_app *a);        /* alloue world, crée MLX, image, vue */
+int   app_init(t_app *app);        /* alloue world, crée MLX, image, vue */
+void	app_destroy(t_app *app);
 // void  app_destroy(t_app *a);
 
 /* monde */
@@ -179,9 +180,11 @@ void  world_step_dense(t_world *w);                /* lit cur, écrit nxt, swap+
 // static inline int count_neighbors_tore(const t_world *w, int x, int y);
 
 /* rendu */
+void	my_mlx_pixel_put(t_img *data, int x, int y, int color);
 int   gfx_init(t_gfx *g, int win_w, int win_h, const char *title);
 void  gfx_destroy(t_gfx *g);
-void  frame_clear(t_img *img, uint32_t argb);
+void	clear_frame(t_img *img);
+// void  frame_clear(t_img *img, uint32_t argb);
 void  frame_fill_rect(t_img *img, t_rect r, uint32_t argb);
 void  draw_world_to_frame(const t_world *w, const t_view *v, t_img *dst);
 
