@@ -1,9 +1,9 @@
 #include "GoL.h"
 
-void	app_destroy(t_app *app)
+int	app_destroy(t_app *app, int exit_code)
 {
 	if (!app)
-		return ;
+		exit(exit_code);
 	if ((app->init_status & INIT_IMG) && app->gfx.frame.img)
 	{
 		mlx_destroy_image(app->gfx.mlx, app->gfx.frame.img);
@@ -23,4 +23,5 @@ void	app_destroy(t_app *app)
 		app->gfx.mlx = NULL;
 		app->init_status &= ~ INIT_MLX;
 	}
+	exit(exit_code);
 }

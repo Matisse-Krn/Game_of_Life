@@ -16,8 +16,10 @@ int	main(int argc, char **argv, char **envp)
 	(void)argv;
 	ft_bzero(&app, sizeof(app));
 	if (!app_init(&app))
-		return (app_destroy(&app), 1);
+		return (app_destroy(&app, 1), 1);
+	mlx_hook(app.gfx.win, 2, 1L << 0, key_pressed, &app);
+	mlx_hook(app.gfx.win, 17, 1L << 0, app_destroy, &app);
 	mlx_loop_hook(app.gfx.mlx, loop_hook, &app);
 	mlx_loop(app.gfx.mlx);
-	return (app_destroy(&app), 0);
+	return (app_destroy(&app, 0), 0);
 }

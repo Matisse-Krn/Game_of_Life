@@ -27,11 +27,17 @@ static int	init_mlx_basics(t_app *app)
 	
 
 	mlx_get_screen_size(app->gfx.mlx, &app->gfx.win_w, &app->gfx.win_h);
+	
+	// DEBUG : Hard-coded window size
+	app->gfx.win_w = 1200;
+	app->gfx.win_h = 800;
+	// DEBUG : End of hard-coded window size
+
 	app->gfx.win = mlx_new_window(app->gfx.mlx, app->gfx.win_w, app->gfx.win_h, "GoL - Game of Life");
 	if (!app->gfx.win)
 		return (FALSE);
 	app->init_status |= INIT_WIN;
-	
+
 
 	return (TRUE);
 }
