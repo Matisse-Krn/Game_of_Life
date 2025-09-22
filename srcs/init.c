@@ -7,7 +7,8 @@ int	app_init(t_app *app)
 		return (FALSE);
 	app->init_status |= INIT_WORLD;
 	srand(time(NULL));
-	world_seed_random(&app->world, 50);
+	world_seed_random(&app->world, 10);
+	init_view_defaults(app);
 	return (TRUE);
 
 }

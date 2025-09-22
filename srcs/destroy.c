@@ -1,5 +1,10 @@
 #include "GoL.h"
 
+int	on_close(t_app *app)
+{
+	app_destroy(app, 0);
+	return (0);
+}
 
 static void	world_free(t_world *world)
 {

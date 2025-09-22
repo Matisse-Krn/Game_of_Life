@@ -8,9 +8,11 @@ int	app_init(t_app *app);        /* alloue world, crée MLX, image, vue */
 int	world_alloc(t_world *world, int grid_w, int grid_h, t_border border_mode);
 void	world_seed_random(t_world *world, int percent);
 int	app_destroy(t_app *app, int exit_code);
+int	on_close(t_app *app);
 // MLX init
 int	init_mlx_basics(t_app *app);
 int	init_mlx_image(t_app *app);
+void	init_view_defaults(t_app *app);
 
 // void  app_destroy(t_app *a);
 
@@ -22,8 +24,12 @@ int	init_mlx_image(t_app *app);
 
 /* step */
 // void  world_step_dense(t_world *w);                /* lit cur, écrit nxt, swap+stats */
+void	world_step_dense(t_world *world);
 
 /* voisinage (helpers inline dans le .c) */
+int	count_neighbors_tore(const t_world *world, int cx, int cy);
+int	count_neighbors_clamp(const t_world *world, int cx, int cy);
+int	is_cell_alive_next(const t_world *world, int x, int y);
 // static inline int count_neighbors_clamp(const t_world *w, int x, int y);
 // static inline int count_neighbors_tore(const t_world *w, int x, int y);
 
@@ -35,6 +41,7 @@ void	clear_frame(t_img *img);
 // void  frame_clear(t_img *img, uint32_t argb);
 // void  frame_fill_rect(t_img *img, t_rect r, uint32_t argb);
 // void  draw_world_to_frame(const t_world *w, const t_view *v, t_img *dst);
+void	draw_world_to_frame(const t_world *world, const t_view *view, t_img *dst);
 
 /* vue */
 // void  view_center_on(t_view *v, int cx, int cy, const t_gfx *g);

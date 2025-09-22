@@ -66,10 +66,8 @@ typedef struct s_world
 typedef struct s_view
 {
 	int	cell_px;    /* taille d'une cellule en pixels (>=1)           */
-	int	ox;         /* offset monde -> écran (cellules, coin haut-g.) */
-	int	oy;         /* idem                                           */
-
-	/* Garde-fous UX */
+	int	offset_x;         /* offset monde -> écran (cellules, coin haut-g.) */
+	int	offset_y;         /* idem                                           */
 	int	cell_px_min;
 	int	cell_px_max;
 }	t_view;
