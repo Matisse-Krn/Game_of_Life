@@ -1,7 +1,7 @@
 CC = cc
 FLAGS = -Wall -Wextra -Werror -g3
 NAME = game_of_life
-SRCS = srcs/init.c srcs/image_utils.c srcs/mlx_hooks.c srcs/destroy.c srcs/main.c
+SRCS = srcs/init.c srcs/init_world.c srcs/image_utils.c srcs/init_mlx.c srcs/mlx_hooks.c srcs/destroy.c srcs/main.c
 OBJ = $(SRCS:.c=.o)
 LIB_PATH = -Lmlx_linux -Llibft -L/usr/lib
 LIB_NAME = -lmlx_Linux -lft -lXext -lX11 -lm -lz
