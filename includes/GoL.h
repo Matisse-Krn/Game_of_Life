@@ -2,11 +2,13 @@
 # define GOL_H
 
 # include "GoL_def.h"
+# include "GoL_keys.h"
 
 /* init / teardown */
 int	app_init(t_app *app);        /* alloue world, crée MLX, image, vue */
 int	world_alloc(t_world *world, int grid_w, int grid_h, t_border border_mode);
 void	world_seed_random(t_world *world, int percent);
+void	world_clear(t_world *world);
 int	app_destroy(t_app *app, int exit_code);
 int	on_close(t_app *app);
 // MLX init
@@ -53,7 +55,10 @@ void	draw_world_to_frame(const t_world *world, const t_view *view, t_img *dst);
 
 /* input & loop */
 // void  input_begin_frame(t_input *in);            /* reset wheel, step, etc. */
-int	key_pressed(int keycode, t_app *app);
+int	on_key_press(int keycode, t_app *app);
+int	on_key_release(int keycode, t_app *app);
+void	input_begin_frame(t_input *in);
+void	apply_input_core(t_app *a);
 // void  handle_key_event(t_app *a, int keycode, int pressed);
 // void  handle_mouse_event(t_app *a, int x, int y, int type, int delta);
 // void  app_update(t_app *a);                      /* cadence fixe: run ticks, puis rendre */

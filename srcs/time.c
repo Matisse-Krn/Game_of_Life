@@ -13,7 +13,7 @@ double	now_ms(void)
 
 void	init_clock_defaults(t_app *app)
 {
-	app->clk.target_tps = 20.0;
+	app->clk.target_tps = app->cfg.start_tps;
 	app->clk.acc = 0.0;
 	app->clk.last_ms = now_ms();
 }
@@ -23,11 +23,13 @@ void	loop_do_steps(t_app *app, double dt_ms)
 	double	step_ms;
 
 	app->clk.acc += dt_ms;
-	if (app->clk.acc > 250.0)
-		app->clk.acc = 250.0;
+	if (app->clk.acc < 0.0)
+		app->clk.acc = 0.0;
 	if (app->run != RUN_PLAY)
 		return ;
 	step_ms = 1000.0 / app->clk.target_tps;
+	if (step_ms < 0.1)
+		step_ms = 0.1;
 	if (app->clk.acc >= step_ms)
 	{
 		world_step_dense(&app->world);

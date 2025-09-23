@@ -28,7 +28,8 @@ typedef enum e_runstate
 
 # define TILE_SIZE 64
 
-# define ESC 65307
+#define TPS_MIN  0.2
+#define TPS_MAX  300.0
 
 /* ---------- Types basiques utilitaires ---------- */
 
@@ -102,20 +103,26 @@ typedef struct s_gfx
 
 typedef struct s_input
 {
-	int	key_up;      /* bool-like (0/1) */
+	/* états tenus (gardés pour la caméra plus tard) */
+	int	key_up;
 	int	key_down;
 	int	key_left;
 	int	key_right;
 
-	int	key_step;    /* step 1 tick si pause */
-	int	key_speed_up;
-	int	key_speed_dn;
-	int	key_toggle_border;
+	/* impulsions (remises à 0 chaque frame) */
+	int	req_toggle_run;
+	int	req_step_once;
+	int	req_speed_up;
+	int	req_speed_down;
+	int	req_toggle_border;
+	int	req_clear_world;
+	int	req_reseed_world;
 
-	int	mouse_down;  /* drag pour pan */
+	/* souris: a ajouter plus tard (caméra) */
+	int	mouse_down;
 	int	mouse_x;
 	int	mouse_y;
-	int	mouse_wheel; /* -1 / 0 / +1 sur l’itération */
+	int	mouse_wheel;
 }	t_input;
 
 /* ---------- Horloge / cadence ---------- */
@@ -124,7 +131,7 @@ typedef struct s_input
 typedef struct s_clock
 {
 	double  target_tps;   /* ticks (steps) par seconde désirés */
-	double  acc;          /* accumulateur de temps */
+	double  acc;          /* accumulateur simu (ms) */
 	double  last_ms;      /* timestamp ms dernière frame */
 }	t_clock;
 
