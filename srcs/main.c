@@ -2,10 +2,17 @@
 
 static int	loop_hook(t_app *app)
 {
+	double	now;
+	double	dt;
+
+	now = now_ms();
+	dt = now - app->clk.last_ms;
+	app->clk.last_ms = now;
+	loop_do_steps(app, dt);
 	clear_frame(&app->gfx.frame);
-	world_step_dense(&app->world);
 	draw_world_to_frame(&app->world, &app->view, &app->gfx.frame);
-	mlx_put_image_to_window(app->gfx.mlx, app->gfx.win, app->gfx.frame.img, 0, 0);
+	mlx_put_image_to_window(app->gfx.mlx, app->gfx.win,
+		app->gfx.frame.img, 0, 0);
 	return (0);
 }
 

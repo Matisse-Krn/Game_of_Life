@@ -26,6 +26,8 @@ typedef enum e_runstate
 # define INIT_IMG 4
 # define INIT_WORLD 8
 
+# define TILE_SIZE 64
+
 # define ESC 65307
 
 /* ---------- Types basiques utilitaires ---------- */

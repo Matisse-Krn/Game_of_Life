@@ -22,14 +22,16 @@ void	init_view_defaults(t_app *app);
 // void  world_clear(t_world *w);
 // void  world_seed_random(t_world *w, int percent);
 
+/* time */
+double	now_ms(void);
+void	init_clock_defaults(t_app *app);
+void	loop_do_steps(t_app *app, double dt_ms);
+
 /* step */
 // void  world_step_dense(t_world *w);                /* lit cur, écrit nxt, swap+stats */
 void	world_step_dense(t_world *world);
 
 /* voisinage (helpers inline dans le .c) */
-int	count_neighbors_tore(const t_world *world, int cx, int cy);
-int	count_neighbors_clamp(const t_world *world, int cx, int cy);
-int	is_cell_alive_next(const t_world *world, int x, int y);
 // static inline int count_neighbors_clamp(const t_world *w, int x, int y);
 // static inline int count_neighbors_tore(const t_world *w, int x, int y);
 
@@ -39,6 +41,7 @@ void	my_mlx_pixel_put(t_img *img, int x, int y, int color);
 // void  gfx_destroy(t_gfx *g);
 void	clear_frame(t_img *img);
 // void  frame_clear(t_img *img, uint32_t argb);
+void	frame_fill_rect(t_img *img, t_rect rect, unsigned int argb);
 // void  frame_fill_rect(t_img *img, t_rect r, uint32_t argb);
 // void  draw_world_to_frame(const t_world *w, const t_view *v, t_img *dst);
 void	draw_world_to_frame(const t_world *world, const t_view *view, t_img *dst);

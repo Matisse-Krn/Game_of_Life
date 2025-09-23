@@ -17,25 +17,8 @@ static void	world_free(t_world *world)
 	ft_bzero(world, sizeof(*world));
 }
 
-int	app_destroy(t_app *app, int exit_code)
+static void	mlx_destroy(t_app *app)
 {
-	if (!app)
-		exit(exit_code);
-	if ((app->init_status & INIT_WORLD))
-	{
-		// if (app->world.next)
-		// {
-		// 	free(app->world.next);
-		// 	app->world.next = NULL;
-		// }
-		// if (app->world.next)
-		// {
-		// 	free(app->world.cur);
-		// 	app->world.cur = NULL;
-		// }
-		world_free(&app->world);
-		app->init_status &= ~INIT_WORLD;
-	}
 	if ((app->init_status & INIT_IMG) && app->gfx.frame.img)
 	{
 		mlx_destroy_image(app->gfx.mlx, app->gfx.frame.img);
@@ -53,7 +36,19 @@ int	app_destroy(t_app *app, int exit_code)
 		mlx_destroy_display(app->gfx.mlx);
 		free(app->gfx.mlx);
 		app->gfx.mlx = NULL;
-		app->init_status &= ~ INIT_MLX;
+		app->init_status &= ~INIT_MLX;
 	}
+}
+
+int	app_destroy(t_app *app, int exit_code)
+{
+	if (!app)
+		exit(exit_code);
+	if ((app->init_status & INIT_WORLD))
+	{
+		world_free(&app->world);
+		app->init_status &= ~INIT_WORLD;
+	}
+	mlx_destroy(app);
 	exit(exit_code);
 }
