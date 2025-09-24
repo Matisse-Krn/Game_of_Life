@@ -5,11 +5,11 @@ static int	loop_hook(t_app *app)
 	double	now;
 	double	dt;
 
-	input_begin_frame(&app->in);
 	now = now_ms();
 	dt = now - app->clk.last_ms;
 	app->clk.last_ms = now;
 	apply_input_core(app);
+	apply_input_camera(app, dt);
 	loop_do_steps(app, dt);
 	draw_world_to_frame(&app->world, &app->view, &app->gfx.frame);
 	mlx_put_image_to_window(app->gfx.mlx, app->gfx.win,
@@ -30,6 +30,9 @@ int	main(int argc, char **argv, char **envp)
 	mlx_hook(app.gfx.win, 2, 1L << 0, on_key_press, &app);
 	mlx_hook(app.gfx.win, 3, 1L << 1, on_key_release, &app);
 	mlx_hook(app.gfx.win, 17, 1L << 17, on_close, &app);
+	mlx_hook(app.gfx.win, 4, 1L << 2, on_mouse_press, &app);
+	mlx_hook(app.gfx.win, 5, 1L << 3, on_mouse_release, &app);
+	mlx_hook(app.gfx.win, 6, 1L << 6, on_mouse_move, &app);
 	mlx_loop_hook(app.gfx.mlx, loop_hook, &app);
 	mlx_loop(app.gfx.mlx);
 	return (app_destroy(&app, 0), 0);

@@ -7,7 +7,7 @@ int	app_init(t_app *app)
 		|| !world_alloc(&app->world, 2048, 2048, BORDER_TORE))
 		return (FALSE);
 	app->init_status |= INIT_WORLD;
-	app->cfg.start_density = 15;
+	app->cfg.start_density = 10;
 	app->cfg.start_tps = 1.0;
 	srand(time(NULL));
 	world_seed_random(&app->world, app->cfg.start_density);

@@ -3,6 +3,7 @@
 
 # include <stdint.h>
 # include <time.h>
+# include <math.h>
 # include "libft.h"
 # include "mlx.h"
 
@@ -28,8 +29,10 @@ typedef enum e_runstate
 
 # define TILE_SIZE 64
 
-#define TPS_MIN  0.2
-#define TPS_MAX  300.0
+#define TPS_MIN 0.2
+#define TPS_MAX 300.0
+
+#define CAMERA_BASE_PX_PER_SEC 800.0
 
 /* ---------- Types basiques utilitaires ---------- */
 
@@ -75,6 +78,13 @@ typedef struct s_view
 	int	cell_px_max;
 }	t_view;
 
+typedef struct s_zoom_ctx
+{
+	int		new_cell_px;
+	int		old_cell_px;
+	t_point	pivot_screen;
+}	t_zoom_ctx;
+
 /* ---------- Image MLX (framebuffer logiciel) ---------- */
 
 typedef struct s_img
@@ -103,13 +113,11 @@ typedef struct s_gfx
 
 typedef struct s_input
 {
-	/* états tenus (gardés pour la caméra plus tard) */
 	int	key_up;
 	int	key_down;
 	int	key_left;
 	int	key_right;
 
-	/* impulsions (remises à 0 chaque frame) */
 	int	req_toggle_run;
 	int	req_step_once;
 	int	req_speed_up;
@@ -118,11 +126,14 @@ typedef struct s_input
 	int	req_clear_world;
 	int	req_reseed_world;
 
-	/* souris: a ajouter plus tard (caméra) */
-	int	mouse_down;
-	int	mouse_x;
-	int	mouse_y;
-	int	mouse_wheel;
+	int	req_zoom_in;
+	int	req_zoom_out;
+
+	int	mouse_dragging;
+	int	drag_px_acc_x;
+	int	drag_px_acc_y;
+	int	mouse_last_x;
+	int	mouse_last_y;
 }	t_input;
 
 /* ---------- Horloge / cadence ---------- */

@@ -49,6 +49,13 @@ void	frame_fill_rect(t_img *img, t_rect rect, unsigned int argb);
 void	draw_world_to_frame(const t_world *world, const t_view *view, t_img *dst);
 
 /* vue */
+void	clamp_view_offsets(t_view *v, const t_world *w, const t_gfx *g);
+void	view_pan_cells(t_view *view, const t_world *world, t_point delta_cells, const t_gfx *gfx);
+void	view_zoom_at_app(t_app *app, int delta, t_point pivot_scr);
+void	apply_input_camera(t_app *a, double dt_ms);
+int	on_mouse_press(int button, int x, int y, t_app *app);
+int	on_mouse_release(int button, int x, int y, t_app *app);
+int	on_mouse_move(int x, int y, t_app *app);
 // void  view_center_on(t_view *v, int cx, int cy, const t_gfx *g);
 // void  view_zoom(t_view *v, int delta, t_point pivot_scr, t_gfx *g); /* zoom autour du curseur */
 // void  view_pan(t_view *v, int dx_cells, int dy_cells);
@@ -57,7 +64,7 @@ void	draw_world_to_frame(const t_world *world, const t_view *view, t_img *dst);
 // void  input_begin_frame(t_input *in);            /* reset wheel, step, etc. */
 int	on_key_press(int keycode, t_app *app);
 int	on_key_release(int keycode, t_app *app);
-void	input_begin_frame(t_input *in);
+void	handle_speed_adjust_requests(t_app *app);
 void	apply_input_core(t_app *a);
 // void  handle_key_event(t_app *a, int keycode, int pressed);
 // void  handle_mouse_event(t_app *a, int x, int y, int type, int delta);
