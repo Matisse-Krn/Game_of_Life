@@ -1,5 +1,7 @@
 #include "GoL.h"
 
+void	demo_font5_on_frame(t_img *dst);
+
 static int	loop_hook(t_app *app)
 {
 	double	now;
@@ -12,6 +14,9 @@ static int	loop_hook(t_app *app)
 	apply_input_camera(app, dt);
 	loop_do_steps(app, dt);
 	draw_world_to_frame(&app->world, &app->view, &app->gfx.frame);
+	// text_draw(&(t_textdraw){&app->gfx.frame, app->ui_font,
+		// "HELLO WORLD - 0123456789", (t_point){16, 24},
+		// (t_textfmt){12, TEXT_DEFAULT_SPACING(12), 0xFFFF0000}});
 	mlx_put_image_to_window(app->gfx.mlx, app->gfx.win,
 		app->gfx.frame.img, 0, 0);
 	return (0);

@@ -44,6 +44,12 @@ int	app_destroy(t_app *app, int exit_code)
 {
 	if (!app)
 		exit(exit_code);
+	if ((app->init_status & INIT_FONT) && app->ui_font)
+	{
+		font_destroy(&app->ui_font);
+		app->ui_font = NULL;
+		app->init_status &= ~INIT_FONT;
+	}
 	if ((app->init_status & INIT_WORLD))
 	{
 		world_free(&app->world);

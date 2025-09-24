@@ -3,6 +3,9 @@
 int	app_init(t_app *app)
 {
 	app->init_status = INIT_NONE;
+	app->ui_font = font_create();
+	if (app->ui_font)
+		app->init_status |= INIT_FONT;
 	if (!init_mlx_basics(app) || !init_mlx_image(app)
 		|| !world_alloc(&app->world, 2048, 2048, BORDER_TORE))
 		return (FALSE);

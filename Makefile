@@ -1,7 +1,7 @@
 CC = cc
 FLAGS = -Wall -Wextra -Werror -O3 -g3 -march=native -flto
 NAME = game_of_life
-SRCS = srcs/compute_step.c srcs/init.c srcs/input_speed_control.c srcs/input_camera.c srcs/camera_view_utils.c srcs/time.c srcs/world_draw.c srcs/init_world.c srcs/input_mouse.c srcs/image_utils.c srcs/init_mlx.c srcs/input_core.c srcs/camera_view.c srcs/clip_fill.c srcs/destroy.c srcs/input_keyboard.c srcs/main.c srcs/init_view.c
+SRCS = srcs/compute_step.c srcs/init.c srcs/input_speed_control.c srcs/input_camera.c srcs/camera_view_utils.c srcs/time.c srcs/world_draw.c srcs/init_world.c srcs/font5_port_gol.c srcs/input_mouse.c srcs/image_utils.c srcs/init_mlx.c srcs/input_core.c srcs/camera_view.c srcs/clip_fill.c srcs/destroy.c srcs/input_keyboard.c srcs/mlx_font/glyph_table.c srcs/mlx_font/font.c srcs/mlx_font/pixel_safe.c srcs/mlx_font/demo_font5.c srcs/mlx_font/text_layout.c srcs/mlx_font/glyph_table2.c srcs/mlx_font/text_draw.c srcs/main.c srcs/init_view.c
 OBJ = $(SRCS:.c=.o)
 LIB_PATH = -Lmlx_linux -Llibft -L/usr/lib
 LIB_NAME = -lmlx_Linux -lft -lXext -lX11 -lm -lz
