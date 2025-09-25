@@ -11,7 +11,39 @@ typedef struct s_img	t_img;
 
 # define FONT5_COLS 5
 # define FONT5_ROWS 5
-# define TEXT_DEFAULT_SPACING(sz) (sz)
+
+# define ROW_00000 0x00
+# define ROW_00001 0x08
+# define ROW_00010 0x10
+# define ROW_00011 0x18
+# define ROW_00100 0x20
+# define ROW_00101 0x28
+# define ROW_00110 0x30
+# define ROW_00111 0x38
+# define ROW_01000 0x40
+# define ROW_01001 0x48
+# define ROW_01010 0x50
+# define ROW_01011 0x58
+# define ROW_01100 0x60
+# define ROW_01101 0x68
+# define ROW_01110 0x70
+# define ROW_01111 0x78
+# define ROW_10000 0x80
+# define ROW_10001 0x88
+# define ROW_10010 0x90
+# define ROW_10011 0x98
+# define ROW_10100 0xA0
+# define ROW_10101 0xA8
+# define ROW_10110 0xB0
+# define ROW_10111 0xB8
+# define ROW_11000 0xC0
+# define ROW_11001 0xC8
+# define ROW_11010 0xD0
+# define ROW_11011 0xD8
+# define ROW_11100 0xE0
+# define ROW_11101 0xE8
+# define ROW_11110 0xF0
+# define ROW_11111 0xF8
 
 /* 5x5 bitmap glyph: use top-5 bits of each row (bits 7..3) */
 typedef struct s_glyph5

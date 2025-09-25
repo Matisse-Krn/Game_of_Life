@@ -1,15 +1,11 @@
 #include "font5.h"
 
-/* -------------------------------------------------------------------------- */
-/* Helpers (petits, Norme OK)                                                 */
-/* -------------------------------------------------------------------------- */
-
 static t_textfmt	f5_fmt(int size, int color)
 {
 	t_textfmt	fmt;
 
 	fmt.size = size;
-	fmt.spacing = TEXT_DEFAULT_SPACING(size);
+	fmt.spacing = size;
 	fmt.color = color;
 	return (fmt);
 }
@@ -58,10 +54,6 @@ static int	demo_block_sizes(t_textdraw *td, int y0)
 	}
 	return (y);
 }
-
-/* -------------------------------------------------------------------------- */
-/* API : à appeler depuis ta boucle pour voir la page de test                 */
-/* -------------------------------------------------------------------------- */
 
 void	demo_font5_on_frame(t_img *dst)
 {

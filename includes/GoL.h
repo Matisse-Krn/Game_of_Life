@@ -35,6 +35,21 @@ void	frame_fill_rect(t_img *img, t_rect rect, unsigned int argb);
 void	draw_world_to_frame(const t_world *world, const t_view *view,
 			t_img *dst);
 
+/* HUD */
+void	hud_draw(t_app *app);
+void	buf_reset(char *dst);
+void	buf_cat_str(char *dst, int cap, const char *src);
+void	buf_cat_sep(char *dst, int cap);
+void	buf_cat_char(char *dst, int cap, char c);
+void	buf_cat_i32(char *dst, int cap, int v);
+void	buf_cat_f1(char *dst, int cap, double x);
+void	panel_draw_box(t_img *dst, t_rect box, int bg, int border);
+void	draw_status_panel(t_app *app);
+void	draw_help_panel(t_app *app);
+void	status_line_text(t_app *app, int line_idx, char *out, int cap);
+int		hud_line_step(void);
+void	buf_cat_u32(char *dst, int cap, unsigned int v);
+
 /* vue */
 void	clamp_view_offsets(t_view *v, const t_world *w, const t_gfx *g);
 void	view_pan_cells(t_view *view, const t_world *world,
@@ -49,6 +64,7 @@ int		on_mouse_move(int x, int y, t_app *app);
 int		on_key_press(int keycode, t_app *app);
 int		on_key_release(int keycode, t_app *app);
 void	handle_speed_adjust_requests(t_app *app);
+void	handle_toggle_hud(t_app *app);
 void	apply_input_core(t_app *a);
 
 #endif

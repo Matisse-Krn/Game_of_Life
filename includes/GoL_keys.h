@@ -6,8 +6,9 @@
 # define KEY_SPACE			32
 # define KEY_B				98
 # define KEY_C				99
-# define KEY_R				114
+# define KEY_H				104
 # define KEY_N				110
+# define KEY_R				114
 
 # define KEY_PGUP			65365
 # define KEY_PGDN			65366

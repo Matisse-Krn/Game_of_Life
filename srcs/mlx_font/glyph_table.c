@@ -1,68 +1,64 @@
 #include "font5.h"
 
-#define ROW(b4,b3,b2,b1,b0) \
-	((uint8_t)(((b4)<<7)|((b3)<<6)|((b2)<<5)|((b1)<<4)|((b0)<<3)))
-#define GLY5(r0,r1,r2,r3,r4) (t_glyph5){{(r0),(r1),(r2),(r3),(r4)}}
-
 static void	install_basic(t_font *f)
 {
 	t_glyph5	space;
 	t_glyph5	qmark;
 
-	space = GLY5(ROW(0, 0, 0, 0, 0), ROW(0, 0, 0, 0, 0), ROW(0, 0, 0, 0, 0),
-			ROW(0, 0, 0, 0, 0), ROW(0, 0, 0, 0, 0));
-	qmark = GLY5(ROW(0, 1, 1, 1, 0), ROW(1, 0, 0, 0, 1), ROW(0, 0, 0, 1, 0),
-			ROW(0, 0, 0, 0, 0), ROW(0, 0, 1, 0, 0));
+	space = (t_glyph5){{ROW_00000, ROW_00000, ROW_00000,
+		ROW_00000, ROW_00000}};
+	qmark = (t_glyph5){{ROW_01110, ROW_10001, ROW_00010,
+		ROW_00000, ROW_00100}};
 	font_install_glyph(f, ' ', space);
 	font_install_glyph(f, '?', qmark);
 }
 
 static void	install_punct_basic(t_font *f)
 {
-	font_install_glyph(f, ':', GLY5(ROW(0, 0, 0, 0, 0), ROW(0, 0, 0, 0, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 0, 0, 0, 0), ROW(0, 0, 1, 0, 0)));
-	font_install_glyph(f, '.', GLY5(ROW(0, 0, 0, 0, 0), ROW(0, 0, 0, 0, 0),
-			ROW(0, 0, 0, 0, 0), ROW(0, 0, 0, 0, 0), ROW(0, 0, 1, 0, 0)));
-	font_install_glyph(f, ',', GLY5(ROW(0, 0, 0, 0, 0), ROW(0, 0, 0, 0, 0),
-			ROW(0, 0, 0, 0, 0), ROW(0, 0, 1, 0, 0), ROW(0, 1, 0, 0, 0)));
-	font_install_glyph(f, ';', GLY5(ROW(0, 0, 0, 0, 0), ROW(0, 0, 1, 0, 0),
-			ROW(0, 0, 0, 0, 0), ROW(0, 0, 1, 0, 0), ROW(0, 1, 0, 0, 0)));
-	font_install_glyph(f, '!', GLY5(ROW(0, 0, 1, 0, 0), ROW(0, 0, 1, 0, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 0, 0, 0, 0), ROW(0, 0, 1, 0, 0)));
-	font_install_glyph(f, '\\', GLY5(ROW(1, 0, 0, 0, 0), ROW(0, 1, 0, 0, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 0, 0, 1, 0), ROW(0, 0, 0, 0, 1)));
-	font_install_glyph(f, '|', GLY5(ROW(0, 0, 1, 0, 0), ROW(0, 0, 1, 0, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 0, 1, 0, 0), ROW(0, 0, 1, 0, 0)));
+	font_install_glyph(f, ':',
+		(t_glyph5){{ROW_00000, ROW_00100, ROW_00000, ROW_00100, ROW_00000}});
+	font_install_glyph(f, '.',
+		(t_glyph5){{ROW_00000, ROW_00000, ROW_00000, ROW_00000, ROW_00100}});
+	font_install_glyph(f, ',',
+		(t_glyph5){{ROW_00000, ROW_00000, ROW_00000, ROW_00100, ROW_01000}});
+	font_install_glyph(f, ';',
+		(t_glyph5){{ROW_00000, ROW_00100, ROW_00000, ROW_00100, ROW_01000}});
+	font_install_glyph(f, '!',
+		(t_glyph5){{ROW_00100, ROW_00100, ROW_00100, ROW_00000, ROW_00100}});
+	font_install_glyph(f, '\\',
+		(t_glyph5){{ROW_10000, ROW_01000, ROW_00100, ROW_00010, ROW_00001}});
+	font_install_glyph(f, '|',
+		(t_glyph5){{ROW_00100, ROW_00100, ROW_00100, ROW_00100, ROW_00100}});
 }
 
 static void	install_punct_ops(t_font *f)
 {
-	font_install_glyph(f, '-', GLY5(ROW(0, 0, 0, 0, 0), ROW(0, 0, 0, 0, 0),
-			ROW(0, 1, 1, 1, 0), ROW(0, 0, 0, 0, 0), ROW(0, 0, 0, 0, 0)));
-	font_install_glyph(f, '+', GLY5(ROW(0, 0, 0, 0, 0), ROW(0, 0, 1, 0, 0),
-			ROW(0, 1, 1, 1, 0), ROW(0, 0, 1, 0, 0), ROW(0, 0, 0, 0, 0)));
-	font_install_glyph(f, '/', GLY5(ROW(0, 0, 0, 0, 1), ROW(0, 0, 0, 1, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 1, 0, 0, 0), ROW(1, 0, 0, 0, 0)));
-	font_install_glyph(f, '%', GLY5(ROW(1, 0, 0, 0, 1), ROW(0, 0, 0, 1, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 1, 0, 0, 0), ROW(1, 0, 0, 0, 1)));
-	font_install_glyph(f, '=', GLY5(ROW(0, 0, 0, 0, 0), ROW(1, 1, 1, 1, 1),
-			ROW(0, 0, 0, 0, 0), ROW(1, 1, 1, 1, 1), ROW(0, 0, 0, 0, 0)));
+	font_install_glyph(f, '-',
+		(t_glyph5){{ROW_00000, ROW_00000, ROW_01110, ROW_00000, ROW_00000}});
+	font_install_glyph(f, '+',
+		(t_glyph5){{ROW_00000, ROW_00100, ROW_01110, ROW_00100, ROW_00000}});
+	font_install_glyph(f, '/',
+		(t_glyph5){{ROW_00001, ROW_00010, ROW_00100, ROW_01000, ROW_10000}});
+	font_install_glyph(f, '%',
+		(t_glyph5){{ROW_10001, ROW_00010, ROW_00100, ROW_01000, ROW_10001}});
+	font_install_glyph(f, '=',
+		(t_glyph5){{ROW_00000, ROW_11111, ROW_00000, ROW_11111, ROW_00000}});
 }
 
 static void	install_punct_brackets(t_font *f)
 {
-	font_install_glyph(f, '[', GLY5(ROW(0, 0, 1, 1, 0), ROW(0, 0, 1, 0, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 0, 1, 0, 0), ROW(0, 0, 1, 1, 0)));
-	font_install_glyph(f, ']', GLY5(ROW(0, 1, 1, 0, 0), ROW(0, 0, 1, 0, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 0, 1, 0, 0), ROW(0, 1, 1, 0, 0)));
-	font_install_glyph(f, '(', GLY5(ROW(0, 0, 0, 1, 0), ROW(0, 0, 1, 0, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 0, 1, 0, 0), ROW(0, 0, 0, 1, 0)));
-	font_install_glyph(f, ')', GLY5(ROW(0, 1, 0, 0, 0), ROW(0, 0, 1, 0, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 0, 1, 0, 0), ROW(0, 1, 0, 0, 0)));
-	font_install_glyph(f, '<', GLY5(ROW(1, 0, 0, 0, 0), ROW(0, 1, 0, 0, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 1, 0, 0, 0), ROW(1, 0, 0, 0, 0)));
-	font_install_glyph(f, '>', GLY5(ROW(0, 0, 0, 0, 1), ROW(0, 0, 0, 1, 0),
-			ROW(0, 0, 1, 0, 0), ROW(0, 0, 0, 1, 0), ROW(0, 0, 0, 0, 1)));
+	font_install_glyph(f, '[',
+		(t_glyph5){{ROW_00110, ROW_00100, ROW_00100, ROW_00100, ROW_00110}});
+	font_install_glyph(f, ']',
+		(t_glyph5){{ROW_01100, ROW_00100, ROW_00100, ROW_00100, ROW_01100}});
+	font_install_glyph(f, '(',
+		(t_glyph5){{ROW_00010, ROW_00100, ROW_00100, ROW_00100, ROW_00010}});
+	font_install_glyph(f, ')',
+		(t_glyph5){{ROW_01000, ROW_00100, ROW_00100, ROW_00100, ROW_01000}});
+	font_install_glyph(f, '<',
+		(t_glyph5){{ROW_10000, ROW_01000, ROW_00100, ROW_01000, ROW_10000}});
+	font_install_glyph(f, '>',
+		(t_glyph5){{ROW_00001, ROW_00010, ROW_00100, ROW_00010, ROW_00001}});
 }
 
 void	font5_install_defaults(t_font *f)

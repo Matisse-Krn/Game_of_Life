@@ -14,6 +14,8 @@ int	on_key_press(int keycode, t_app *app)
 		app->in.key_left = 1;
 	if (keycode == KEY_RIGHT)
 		app->in.key_right = 1;
+	if (keycode == KEY_H)
+		app->in.req_toggle_hud = 1;
 	if (keycode == KEY_N && app->run == RUN_PAUSED)
 		app->in.req_step_once = 1;
 	if (keycode == KEY_PGUP)

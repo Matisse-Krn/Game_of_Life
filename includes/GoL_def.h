@@ -34,6 +34,16 @@ typedef enum e_runstate
 
 # define TPS_MIN 0.2
 # define TPS_MAX 300.0
+# define HUD_COLOR_BG 0xFF141414
+# define HUD_COLOR_BORDER 0xFF2A2A2A
+# define HUD_COLOR_TEXT 0xFFE6E6E6
+# define HUD_COLOR_ACCENT_PLAY 0xFF38D39F
+# define HUD_COLOR_ACCENT_PAUSE 0xFFFFC857
+
+# define HUD_MARGIN_PX   12
+# define HUD_PADDING_PX  8
+# define HUD_LINE_GAP_PX 10
+# define HUD_TEXT_SIZE   2
 
 # define CAMERA_BASE_PX_PER_SEC 800.0
 
@@ -126,6 +136,7 @@ typedef struct s_input
 	int				req_toggle_border;
 	int				req_clear_world;
 	int				req_reseed_world;
+	int             req_toggle_hud;
 
 	int				req_zoom_in;
 	int				req_zoom_out;
@@ -165,6 +176,7 @@ typedef struct s_cfg
 typedef struct s_app
 {
 	int				init_status;
+	int             hud_visible;
 	t_cfg			cfg;
 	t_world			world;
 	t_view			view;

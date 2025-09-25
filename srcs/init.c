@@ -17,5 +17,6 @@ int	app_init(t_app *app)
 	init_view_defaults(app);
 	init_clock_defaults(app);
 	app->run = RUN_PLAY;
+	app->hud_visible = TRUE;
 	return (TRUE);
 }

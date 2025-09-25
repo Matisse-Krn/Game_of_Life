@@ -66,4 +66,5 @@ void	apply_input_core(t_app *app)
 	handle_speed_adjust_requests(app);
 	handle_toggle_border_mode(app);
 	handle_world_clear_and_reseed(app);
+	handle_toggle_hud(app);
 }
