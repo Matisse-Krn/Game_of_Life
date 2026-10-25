@@ -25,7 +25,7 @@ INFOS = \033[1;36m
 RESET = \033[0m
 
 MLX_LINK = https://github.com/42paris/minilibx-linux.git
-LIBFT_LINK = https://github.com/Matisse-Krn/libft.git
+LIBFT_LINK = git@github.com:Matisse-Krn/libft.git
 # The versions in the last known stable release: avoid silent dependency drift.
 MLX_REV = f07d00f07c5c652223f505b526f84dab73cf2598
 LIBFT_REV = f9f9db785d79b99e45635bdfc23e72b3c37874a0
