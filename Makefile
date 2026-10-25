@@ -1,99 +1,110 @@
 CC = cc
-FLAGS = -Wall -Wextra -Werror -O3 -g3 -march=native -flto
+# MiniLibX uses int (*)() for callbacks; C23 interprets this as int (*)(void).
+# GNU C17 preserves the callback signatures used by mlx_hook/ mlx_loop_hook.
+CSTD = -std=gnu17
+CFLAGS = -Wall -Wextra -Werror -O3 -g3 -march=native -flto
+CPPFLAGS = -Imlx_linux -Ilibft/includes -Iincludes
+LDFLAGS = -Lmlx_linux -Llibft
+LDLIBS = -lmlx_Linux -lft -lXext -lX11 -lm
+
 NAME = game_of_life
 SRCS = srcs/compute_step.c srcs/init.c srcs/input_speed_control.c srcs/input_camera.c srcs/camera_view_utils.c srcs/time.c srcs/world_draw.c srcs/init_world.c srcs/input_mouse.c srcs/image_utils.c srcs/init_mlx.c srcs/input_core.c srcs/camera_view.c srcs/clip_fill.c srcs/destroy.c srcs/input_keyboard.c srcs/main.c srcs/init_view.c
 OBJ = $(SRCS:.c=.o)
-LIB_PATH = -Lmlx_linux -Llibft -L/usr/lib
-LIB_NAME = -lmlx_Linux -lft -lXext -lX11 -lm -lz
-INCLUDE_PATH = -I/usr/include -Imlx_linux -Ilibft/includes -Iincludes
+TEST_BIN = tests/test_world
 
 VALID = \033[1;32m
 NOTVALID = \033[1;31m
-LOADING = \033[1;33m
 INFOS = \033[1;36m
 RESET = \033[0m
 
 MLX_LINK = https://github.com/42paris/minilibx-linux.git
-LIBFT_LINK = git@github.com:Matisse-Krn/libft.git
+LIBFT_LINK = https://github.com/Matisse-Krn/libft.git
+# The versions in the last known stable release: avoid silent dependency drift.
+MLX_REV = f07d00f07c5c652223f505b526f84dab73cf2598
+LIBFT_REV = f9f9db785d79b99e45635bdfc23e72b3c37874a0
 
-.PHONY : all
-all: MLX libft/libft.a $(NAME)
+.PHONY: all test DL_MLX MLX DL_LIBFT clean_mlx clean fclean aclean re rr listC listNb norm
+all: $(NAME)
 
-DL_MLX:
-	@if [ ! -d "mlx_linux" ]; then \
-        printf "$(VALID)⇩ Downloading and extracting MiniLibX (from $(MLX_LINK))...\n$(LOADING)"; \
-        git clone $(MLX_LINK) mlx_linux >> /dev/null; \
-		printf "$(RESET)";\
-    else \
-        echo "✅ $(VALID)mlx-linux already downloaded.$(RESET)"; \
-    fi
+mlx_linux/Makefile:
+	@printf "$(VALID)Downloading MiniLibX from $(MLX_LINK)\n$(RESET)"
+	@git clone $(MLX_LINK) mlx_linux
+	@git -C mlx_linux checkout --detach $(MLX_REV)
 
-MLX: DL_MLX
-	@printf "$(VALID)⇩ Make MLX\n$(RESET)";
-	@$(MAKE) -C mlx_linux > /dev/null 2>&1
+mlx_linux/libmlx_Linux.a: mlx_linux/Makefile $(wildcard mlx_linux/*.[ch])
+	@printf "$(VALID)Building MiniLibX\n$(RESET)"
+	@$(MAKE) -C mlx_linux > /dev/null
 
-DL_LIBFT:
-	@if [ ! -d "libft" -o ! -f "libft/Makefile" ]; then \
-		printf "$(VALID)⇩ Downloading libft (from $(LIBFT_LINK))\n$(LOADING)"; \
-		git clone $(LIBFT_LINK) libft >> /dev/null; \
-		printf "$(RESET)"; \
-	else \
-		echo "✅ $(VALID)libft already downloaded.$(RESET)"; \
-	fi
+DL_MLX: mlx_linux/Makefile
+MLX: mlx_linux/libmlx_Linux.a
 
-libft/libft.a: DL_LIBFT
-	@printf "$(VALID)⇩ Make Libft\n$(RESET)";
-	@$(MAKE) -C libft > /dev/null 2>&1
+libft/Makefile:
+	@printf "$(VALID)Downloading libft from $(LIBFT_LINK)\n$(RESET)"
+	@git clone $(LIBFT_LINK) libft
+	@git -C libft checkout --detach $(LIBFT_REV)
+
+libft/libft.a: libft/Makefile $(wildcard libft/*.[ch] libft/includes/*.h)
+	@printf "$(VALID)Building libft\n$(RESET)"
+	@$(MAKE) -C libft FLAGS="$(CSTD) -Wall -Wextra -Werror" > /dev/null
+
+DL_LIBFT: libft/Makefile
+
+# Parallel builds must fetch both sets of headers before compiling our sources.
+$(OBJ): Makefile | mlx_linux/Makefile libft/Makefile
 
 %.o: %.c
-	@$(CC) $(FLAGS) $(INCLUDE_PATH) -MMD -O3 -c $< -o $@
-$(NAME): $(OBJ)
-	@echo "$(INFOS)Flags =		$(FLAGS)\nIncludes =	$(INCLUDE_PATH)\nObj =		$(OBJ)\nLib =		$(LIB_NAME)$(RESET)\n";
-	@$(CC) $(FLAGS) $(OBJ) $(LIB_PATH) $(LIB_NAME) $(INCLUDE_PATH) -o $(NAME);
-	@echo "\n✅ $(VALID)Compilation done !$(RESET)\n"
+	@$(CC) $(CSTD) $(CFLAGS) $(CPPFLAGS) -MMD -MP -c $< -o $@
 
-.PHONY : clean_mlx
+$(NAME): $(OBJ) mlx_linux/libmlx_Linux.a libft/libft.a
+	@printf "$(INFOS)C standard: $(CSTD)\nCompiler flags: $(CFLAGS)\n$(RESET)"
+	@$(CC) $(CSTD) $(CFLAGS) $(OBJ) $(LDFLAGS) $(LDLIBS) -o $(NAME)
+	@printf "$(VALID)Compilation done: ./$(NAME)\n$(RESET)"
+
+# Headless simulation tests: no X11 display or development headers required.
+$(TEST_BIN): tests/test_world.c srcs/compute_step.c srcs/init_world.c libft/libft.a Makefile | mlx_linux/Makefile
+	@$(CC) $(CSTD) $(CFLAGS) $(CPPFLAGS) tests/test_world.c \
+		srcs/compute_step.c srcs/init_world.c libft/libft.a -o $(TEST_BIN)
+
+test: $(TEST_BIN)
+	@./$(TEST_BIN)
+
 clean_mlx:
-	@printf "$(NOTVALID)Cleanning MLX \n$(RESET)";
-	@rm -rf minilibx-linux.tgz
-
-.PHONY : clean
-clean: clean_mlx
-	@printf "$(NOTVALID)Cleanning LIBFT \n$(RESET)";
-	@if [ -f "libft/Makefile" ]; then \
-		$(MAKE) -C libft clean > /dev/null 2>&1;\
+	@printf "$(NOTVALID)Cleaning MiniLibX\n$(RESET)"
+	+@if [ -f "mlx_linux/Makefile.gen" ]; then \
+		$(MAKE) -C mlx_linux clean > /dev/null; \
 	fi
-	@printf "$(NOTVALID)Remove *.o and *.d \n$(RESET)";
-	@rm -rf $(OBJ) $(OBJ:.o=.d)
 
-.PHONY : fclean
+clean: clean_mlx
+	@printf "$(NOTVALID)Cleaning libft and object files\n$(RESET)"
+	+@if [ -f "libft/Makefile" ]; then \
+		$(MAKE) -C libft clean > /dev/null; \
+	fi
+	@rm -f $(OBJ) $(OBJ:.o=.d)
+
 fclean: clean
-	@printf "$(NOTVALID)Remove executable && libft.a\n$(RESET)";
-	@rm -rf $(NAME) libft/libft.a
+	@rm -f $(NAME) $(TEST_BIN) libft/libft.a
 
-.PHONY : aclean
+# Explicitly requested full dependency removal, never part of ordinary clean.
 aclean: fclean
-	@printf "$(NOTVALID)Remove mlx_linux and libft repertories\n$(RESET)";
 	@rm -rf mlx_linux libft
 
-.PHONY : re
-re : fclean all
+re:
+	@$(MAKE) fclean
+	@$(MAKE) all
 
-.PHONY : rr
-rr: aclean all
+rr:
+	@$(MAKE) aclean
+	@$(MAKE) all
 
-.PHONY : listC
 listC:
 	@LIST=$$(find -wholename "./srcs/*.c" | cut -c 3- | tr '\n' ' '); \
-	printf "🗅 $(INFOS)All .c sources files copied into clipboard :\n$(RESET)$$LIST\n"; \
+	printf "All .c sources files copied into clipboard:\n$$LIST\n"; \
 	echo -n $$LIST | xclip -selection clipboard
 
-.PHONY : listNb
 listNb:
-	@echo "Number of .c files :" 
+	@echo "Number of .c files :"
 	@find -wholename "./srcs/*.c" | wc -l
 
-.PHONY : norm
 norm:
 	@norminette ./srcs ./includes ./libft
 
