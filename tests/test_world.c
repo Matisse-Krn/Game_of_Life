@@ -119,12 +119,47 @@ static void test_reset_and_seed(void)
 	release_world(&w);
 }
 
+static void test_fixed_timestep(void)
+{
+	t_app app = {0};
+	unsigned int gen;
+
+	assert(world_alloc(&app.world, 5, 5, BORDER_CLAMP));
+	app.run = RUN_PLAY;
+	app.clk.target_tps = 100.0;
+	loop_do_steps(&app, 35.0);
+	assert(app.world.gen == 3);
+	assert(app.clk.acc > 4.9 && app.clk.acc < 5.1);
+	loop_do_steps(&app, 10.0);
+	assert(app.world.gen == 4);
+	app.run = RUN_PAUSED;
+	loop_do_steps(&app, 1000.0);
+	assert(app.world.gen == 4 && app.clk.acc == 0.0);
+	app.run = RUN_PLAY;
+	loop_do_steps(&app, 10.0);
+	assert(app.world.gen == 5);
+	gen = app.world.gen;
+	loop_do_steps(&app, -10.0);
+	assert(app.world.gen == gen);
+	app.clk.acc = 0.0;
+	app.clk.target_tps = 300.0;
+	loop_do_steps(&app, 10000.0);
+	assert(app.world.gen == gen + 8);
+	assert(app.clk.acc >= 0.0 && app.clk.acc < 1000.0 / 300.0);
+	app.clk.target_tps = 0.0;
+	gen = app.world.gen;
+	loop_do_steps(&app, 100.0);
+	assert(app.world.gen == gen);
+	release_world(&app.world);
+}
+
 int main(void)
 {
 	test_still_life();
 	test_oscillator();
 	test_boundary_modes();
 	test_reset_and_seed();
+	test_fixed_timestep();
 	puts("World simulation tests: OK");
 	return (0);
 }

@@ -3,6 +3,8 @@ libft
 game_of_life
 tests/test_world
 tests/test_hud
+tests/test_input
+tests/test_camera
 
 # Prerequisites
 *.d

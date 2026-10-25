@@ -61,6 +61,7 @@ void	apply_input_core(t_app *app)
 {
 	if (!app)
 		return ;
+	apply_pending_key_actions(app);
 	handle_toggle_run(app);
 	handle_step_once_when_paused(app);
 	handle_speed_adjust_requests(app);

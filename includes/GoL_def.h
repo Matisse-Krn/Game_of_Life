@@ -122,12 +122,31 @@ typedef struct s_gfx
 
 /* ---------- Entrées (état des touches/souris) ---------- */
 
+typedef enum e_key_action
+{
+	KEY_ACTION_RUN,
+	KEY_ACTION_BORDER,
+	KEY_ACTION_CLEAR,
+	KEY_ACTION_RESEED,
+	KEY_ACTION_HUD,
+	KEY_ACTION_COUNT
+}	t_key_action;
+
+typedef struct s_key_release
+{
+	int		pending;
+	int		held;
+	double	released_ms;
+}	t_key_release;
+
 typedef struct s_input
 {
 	int				key_up;
 	int				key_down;
 	int				key_left;
 	int				key_right;
+	double			pan_fraction_x;
+	double			pan_fraction_y;
 
 	int				req_toggle_run;
 	int				req_step_once;
@@ -137,6 +156,7 @@ typedef struct s_input
 	int				req_clear_world;
 	int				req_reseed_world;
 	int             req_toggle_hud;
+	t_key_release	releases[KEY_ACTION_COUNT];
 
 	int				req_zoom_in;
 	int				req_zoom_out;

@@ -4,11 +4,19 @@ int	app_init(t_app *app)
 {
 	app->init_status = INIT_NONE;
 	app->ui_font = font_create();
-	if (app->ui_font)
-		app->init_status |= INIT_FONT;
-	if (!init_mlx_basics(app) || !init_mlx_image(app)
-		|| !world_alloc(&app->world, 2048, 2048, BORDER_TORE))
+	if (!app->ui_font)
+	{
+		ft_putendl_fd("Error: cannot initialize the HUD font", 2);
 		return (FALSE);
+	}
+	app->init_status |= INIT_FONT;
+	if (!init_mlx_basics(app) || !init_mlx_image(app))
+		return (FALSE);
+	if (!world_alloc(&app->world, 2048, 2048, BORDER_TORE))
+	{
+		ft_putendl_fd("Error: cannot allocate the simulation world", 2);
+		return (FALSE);
+	}
 	app->init_status |= INIT_WORLD;
 	app->cfg.start_density = 10;
 	app->cfg.start_tps = 1.0;

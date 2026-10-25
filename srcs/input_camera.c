@@ -28,8 +28,22 @@ static void	camera_pan_from_keys(t_app *app, double dt_ms)
 		vel_y_cells_per_sec = vel_y_cells_per_sec - speed_cells_per_sec;
 	if (app->in.key_down)
 		vel_y_cells_per_sec = vel_y_cells_per_sec + speed_cells_per_sec;
-	delta_cells.x = (int)(vel_x_cells_per_sec * dt_ms / 1000.0);
-	delta_cells.y = (int)(vel_y_cells_per_sec * dt_ms / 1000.0);
+	if (!isfinite(dt_ms) || dt_ms < 0.0)
+		dt_ms = 0.0;
+	if (dt_ms > 250.0)
+		dt_ms = 250.0;
+	if (vel_x_cells_per_sec == 0.0)
+		app->in.pan_fraction_x = 0.0;
+	else
+		app->in.pan_fraction_x += vel_x_cells_per_sec * dt_ms / 1000.0;
+	if (vel_y_cells_per_sec == 0.0)
+		app->in.pan_fraction_y = 0.0;
+	else
+		app->in.pan_fraction_y += vel_y_cells_per_sec * dt_ms / 1000.0;
+	delta_cells.x = (int)app->in.pan_fraction_x;
+	delta_cells.y = (int)app->in.pan_fraction_y;
+	app->in.pan_fraction_x -= delta_cells.x;
+	app->in.pan_fraction_y -= delta_cells.y;
 	if (delta_cells.x != 0 || delta_cells.y != 0)
 		view_pan_cells(&app->view, &app->world, delta_cells, &app->gfx);
 }

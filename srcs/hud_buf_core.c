@@ -59,7 +59,7 @@ void	buf_cat_i32(char *dst, int cap, int v)
 	if (v < 0)
 	{
 		buf_cat_char(dst, cap, '-');
-		u = (unsigned int)(-v);
+		u = 0u - (unsigned int)v;
 	}
 	else
 		u = (unsigned int)v;

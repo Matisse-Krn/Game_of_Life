@@ -5,13 +5,19 @@ int	init_mlx_image(t_app *app)
 	app->gfx.frame.img = mlx_new_image(app->gfx.mlx,
 			app->gfx.win_w, app->gfx.win_h);
 	if (!app->gfx.frame.img)
+	{
+		ft_putendl_fd("Error: cannot create the MiniLibX framebuffer", 2);
 		return (FALSE);
+	}
 	app->init_status |= INIT_IMG;
 	app->gfx.frame.addr = mlx_get_data_addr(app->gfx.frame.img,
 			&app->gfx.frame.bpp, &app->gfx.frame.ll, &app->gfx.frame.endian);
 	if (!app->gfx.frame.addr || app->gfx.frame.bpp != 32
 		|| app->gfx.frame.ll <= 0)
+	{
+		ft_putendl_fd("Error: unsupported MiniLibX framebuffer", 2);
 		return (FALSE);
+	}
 	app->gfx.frame.w = app->gfx.win_w;
 	app->gfx.frame.h = app->gfx.win_h;
 	return (TRUE);
@@ -21,11 +27,17 @@ int	init_mlx_basics(t_app *app)
 {
 	app->gfx.mlx = mlx_init();
 	if (!app->gfx.mlx)
+	{
+		ft_putendl_fd("Error: cannot connect to the X11 display", 2);
 		return (FALSE);
+	}
 	app->init_status |= INIT_MLX;
 	mlx_get_screen_size(app->gfx.mlx, &app->gfx.win_w, &app->gfx.win_h);
 	if (app->gfx.win_w <= 0 || app->gfx.win_h <= 0)
+	{
+		ft_putendl_fd("Error: invalid X11 screen dimensions", 2);
 		return (FALSE);
+	}
 	if (app->gfx.win_w > 1920)
 		app->gfx.win_w = 1920;
 	if (app->gfx.win_h > 1050)
@@ -33,7 +45,10 @@ int	init_mlx_basics(t_app *app)
 	app->gfx.win = mlx_new_window(app->gfx.mlx, app->gfx.win_w,
 			app->gfx.win_h, "GoL - Game of Life");
 	if (!app->gfx.win)
+	{
+		ft_putendl_fd("Error: cannot create the MiniLibX window", 2);
 		return (FALSE);
+	}
 	app->init_status |= INIT_WIN;
 	return (TRUE);
 }

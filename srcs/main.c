@@ -36,6 +36,7 @@ int	main(int argc, char **argv, char **envp)
 	mlx_hook(app.gfx.win, 4, 1L << 2, on_mouse_press, &app);
 	mlx_hook(app.gfx.win, 5, 1L << 3, on_mouse_release, &app);
 	mlx_hook(app.gfx.win, 6, 1L << 6, on_mouse_move, &app);
+	mlx_hook(app.gfx.win, 10, 1L << 21, on_focus_out, &app);
 	mlx_loop_hook(app.gfx.mlx, loop_hook, &app);
 	mlx_loop(app.gfx.mlx);
 	return (app_destroy(&app, 0), 0);

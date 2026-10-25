@@ -45,6 +45,7 @@ void	buf_cat_i32(char *dst, int cap, int v);
 void	buf_cat_f1(char *dst, int cap, double x);
 void	panel_draw_box(t_img *dst, t_rect box, int bg, int border);
 void	draw_status_panel(t_app *app);
+t_rect	hud_status_panel_rect(t_app *app);
 void	draw_help_panel(t_app *app);
 void	status_line_text(t_app *app, int line_idx, char *out, int cap);
 int		hud_line_step(void);
@@ -63,8 +64,12 @@ int		on_mouse_move(int x, int y, t_app *app);
 /* input & loop */
 int		on_key_press(int keycode, t_app *app);
 int		on_key_release(int keycode, t_app *app);
+int		on_focus_out(t_app *app);
 void	handle_speed_adjust_requests(t_app *app);
 void	handle_toggle_hud(t_app *app);
+void	key_action_on_press(t_app *app, int keycode);
+void	key_action_on_release(t_app *app, int keycode);
+void	apply_pending_key_actions(t_app *app);
 void	apply_input_core(t_app *a);
 
 #endif

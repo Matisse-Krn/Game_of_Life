@@ -8,10 +8,12 @@ LDFLAGS = -Lmlx_linux -Llibft
 LDLIBS = -lmlx_Linux -lft -lXext -lX11 -lm
 
 NAME = game_of_life
-SRCS = srcs/compute_step.c srcs/init.c srcs/input_speed_control.c srcs/input_camera.c srcs/hud_mouse.c srcs/camera_view_utils.c srcs/time.c srcs/world_draw.c srcs/init_world.c srcs/hud_status_panel.c srcs/font5_port_gol.c srcs/input_mouse.c srcs/hud_buf_core.c srcs/image_utils.c srcs/init_mlx.c srcs/input_core2.c srcs/input_core.c srcs/camera_view.c srcs/clip_fill.c srcs/destroy.c srcs/input_keyboard.c srcs/mlx_font/glyph_table.c srcs/mlx_font/font.c srcs/mlx_font/pixel_safe.c srcs/mlx_font/demo_font5.c srcs/mlx_font/text_layout.c srcs/mlx_font/glyph_table2.c srcs/mlx_font/text_draw.c srcs/hud_status_text.c srcs/hud_help.c srcs/main.c srcs/init_view.c srcs/hud_buf_misc.c
+SRCS = srcs/compute_step.c srcs/init.c srcs/input_speed_control.c srcs/input_camera.c srcs/hud_mouse.c srcs/camera_view_utils.c srcs/time.c srcs/world_draw.c srcs/init_world.c srcs/hud_status_panel.c srcs/font5_port_gol.c srcs/input_mouse.c srcs/hud_buf_core.c srcs/image_utils.c srcs/init_mlx.c srcs/input_core2.c srcs/input_core.c srcs/input_key_actions.c srcs/camera_view.c srcs/clip_fill.c srcs/destroy.c srcs/input_keyboard.c srcs/mlx_font/glyph_table.c srcs/mlx_font/font.c srcs/mlx_font/pixel_safe.c srcs/mlx_font/demo_font5.c srcs/mlx_font/text_layout.c srcs/mlx_font/glyph_table2.c srcs/mlx_font/text_draw.c srcs/hud_status_text.c srcs/hud_help.c srcs/main.c srcs/init_view.c srcs/hud_buf_misc.c
 OBJ = $(SRCS:.c=.o)
 TEST_BIN = tests/test_world
 HUD_TEST_BIN = tests/test_hud
+INPUT_TEST_BIN = tests/test_input
+CAMERA_TEST_BIN = tests/test_camera
 HUD_TEST_SRCS = tests/test_hud.c srcs/hud_buf_core.c srcs/hud_buf_misc.c \
 	srcs/hud_help.c srcs/hud_mouse.c srcs/hud_status_panel.c \
 	srcs/hud_status_text.c srcs/input_core2.c srcs/image_utils.c \
@@ -66,17 +68,30 @@ $(NAME): $(OBJ) mlx_linux/libmlx_Linux.a libft/libft.a
 	@printf "$(VALID)Compilation done: ./$(NAME)\n$(RESET)"
 
 # Headless simulation tests: no X11 display or development headers required.
-$(TEST_BIN): tests/test_world.c srcs/compute_step.c srcs/init_world.c libft/libft.a Makefile | mlx_linux/Makefile
+$(TEST_BIN): tests/test_world.c srcs/compute_step.c srcs/init_world.c srcs/time.c libft/libft.a Makefile | mlx_linux/Makefile
 	@$(CC) $(CSTD) $(CFLAGS) $(CPPFLAGS) tests/test_world.c \
-		srcs/compute_step.c srcs/init_world.c libft/libft.a -o $(TEST_BIN)
+		srcs/compute_step.c srcs/init_world.c srcs/time.c \
+		libft/libft.a -lm -o $(TEST_BIN)
 
 $(HUD_TEST_BIN): $(HUD_TEST_SRCS) libft/libft.a Makefile | mlx_linux/Makefile
 	@$(CC) $(CSTD) $(CFLAGS) $(CPPFLAGS) $(HUD_TEST_SRCS) \
 		libft/libft.a -o $(HUD_TEST_BIN)
 
-test: $(TEST_BIN) $(HUD_TEST_BIN)
+$(INPUT_TEST_BIN): tests/test_input.c srcs/input_keyboard.c srcs/input_key_actions.c srcs/input_core2.c Makefile | mlx_linux/Makefile libft/Makefile
+	@$(CC) $(CSTD) $(CFLAGS) $(CPPFLAGS) tests/test_input.c \
+		srcs/input_keyboard.c srcs/input_key_actions.c srcs/input_core2.c \
+		-o $(INPUT_TEST_BIN)
+
+$(CAMERA_TEST_BIN): tests/test_camera.c srcs/input_camera.c srcs/camera_view.c srcs/camera_view_utils.c Makefile | mlx_linux/Makefile libft/Makefile
+	@$(CC) $(CSTD) $(CFLAGS) $(CPPFLAGS) tests/test_camera.c \
+		srcs/input_camera.c srcs/camera_view.c srcs/camera_view_utils.c \
+		-lm -o $(CAMERA_TEST_BIN)
+
+test: $(TEST_BIN) $(HUD_TEST_BIN) $(INPUT_TEST_BIN) $(CAMERA_TEST_BIN)
 	@./$(TEST_BIN)
 	@./$(HUD_TEST_BIN)
+	@./$(INPUT_TEST_BIN)
+	@./$(CAMERA_TEST_BIN)
 
 clean_mlx:
 	@printf "$(NOTVALID)Cleaning MiniLibX\n$(RESET)"
@@ -92,7 +107,8 @@ clean: clean_mlx
 	@rm -f $(OBJ) $(OBJ:.o=.d)
 
 fclean: clean
-	@rm -f $(NAME) $(TEST_BIN) $(HUD_TEST_BIN) libft/libft.a
+	@rm -f $(NAME) $(TEST_BIN) $(HUD_TEST_BIN) $(INPUT_TEST_BIN) \
+		$(CAMERA_TEST_BIN) libft/libft.a
 
 # Explicitly requested full dependency removal, never part of ordinary clean.
 aclean: fclean

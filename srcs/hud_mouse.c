@@ -7,12 +7,14 @@ static int	mouse_compute_cell_coords(const t_app *app, int *cx, int *cy)
 	cell_px_safe = app->view.cell_px;
 	if (cell_px_safe < 1)
 		cell_px_safe = 1;
+	if (app->in.mouse_last_x < 0 || app->in.mouse_last_y < 0
+		|| app->in.mouse_last_x >= app->gfx.win_w
+		|| app->in.mouse_last_y >= app->gfx.win_h)
+		return (0);
 	*cx = app->view.offset_x;
 	*cy = app->view.offset_y;
-	if (app->in.mouse_last_x >= 0)
-		*cx = *cx + (app->in.mouse_last_x / cell_px_safe);
-	if (app->in.mouse_last_y >= 0)
-		*cy = *cy + (app->in.mouse_last_y / cell_px_safe);
+	*cx += app->in.mouse_last_x / cell_px_safe;
+	*cy += app->in.mouse_last_y / cell_px_safe;
 	if (*cx < 0 || *cy < 0 || *cx >= app->world.w || *cy >= app->world.h)
 		return (0);
 	return (1);
@@ -49,20 +51,35 @@ static void	draw_mouse_panel(t_app *app)
 	char	line[128];
 	int		w;
 	int		h;
+	int		size;
 	t_rect	box;
+	t_rect	status;
 
 	mouse_line_text(app, line, (int) sizeof(line));
+	size = HUD_TEXT_SIZE;
 	w = text_measure_width(app->ui_font, line,
-			HUD_TEXT_SIZE, HUD_TEXT_SIZE);
-	h = text_line_height(HUD_TEXT_SIZE);
+			size, size);
+	if (w + 2 * (HUD_MARGIN_PX + HUD_PADDING_PX) > app->gfx.win_w)
+	{
+		size = 1;
+		w = text_measure_width(app->ui_font, line, size, size);
+	}
+	if (w + 2 * (HUD_MARGIN_PX + HUD_PADDING_PX) > app->gfx.win_w)
+		return ;
+	h = text_line_height(size);
 	box.w = w + 2 * HUD_PADDING_PX;
 	box.h = h + 2 * HUD_PADDING_PX;
 	box.x = app->gfx.win_w - HUD_MARGIN_PX - box.w;
 	box.y = HUD_MARGIN_PX;
+	status = hud_status_panel_rect(app);
+	if (status.w > 0 && box.x < status.x + status.w + HUD_MARGIN_PX)
+		box.y = status.y + status.h + HUD_MARGIN_PX;
+	if (box.y + box.h + HUD_MARGIN_PX > app->gfx.win_h)
+		return ;
 	panel_draw_box(&app->gfx.frame, box, HUD_COLOR_BG, HUD_COLOR_BORDER);
 	text_draw(&(t_textdraw){&app->gfx.frame, app->ui_font, line,
 		(t_point){box.x + HUD_PADDING_PX, box.y + HUD_PADDING_PX},
-		(t_textfmt){HUD_TEXT_SIZE, HUD_TEXT_SIZE,
+		(t_textfmt){size, size,
 		HUD_COLOR_TEXT}});
 }
 
