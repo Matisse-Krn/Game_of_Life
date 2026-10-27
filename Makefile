@@ -25,12 +25,10 @@ INFOS = \033[1;36m
 RESET = \033[0m
 
 MLX_LINK = https://github.com/42paris/minilibx-linux.git
-LIBFT_LINK = git@github.com:Matisse-Krn/libft.git
-# The versions in the last known stable release: avoid silent dependency drift.
+# The version in the last known stable release: avoid silent dependency drift.
 MLX_REV = f07d00f07c5c652223f505b526f84dab73cf2598
-LIBFT_REV = f9f9db785d79b99e45635bdfc23e72b3c37874a0
 
-.PHONY: all test DL_MLX MLX DL_LIBFT clean_mlx clean fclean aclean re rr listC listNb norm
+.PHONY: all test DL_MLX MLX clean_mlx clean_libft clean fclean aclean re rr listC listNb norm
 all: $(NAME)
 
 mlx_linux/Makefile:
@@ -45,16 +43,9 @@ mlx_linux/libmlx_Linux.a: mlx_linux/Makefile $(wildcard mlx_linux/*.[ch])
 DL_MLX: mlx_linux/Makefile
 MLX: mlx_linux/libmlx_Linux.a
 
-libft/Makefile:
-	@printf "$(VALID)Downloading libft from $(LIBFT_LINK)\n$(RESET)"
-	@git clone $(LIBFT_LINK) libft
-	@git -C libft checkout --detach $(LIBFT_REV)
-
 libft/libft.a: libft/Makefile $(wildcard libft/*.[ch] libft/includes/*.h)
 	@printf "$(VALID)Building libft\n$(RESET)"
-	@$(MAKE) -C libft FLAGS="$(CSTD) -Wall -Wextra -Werror" > /dev/null
-
-DL_LIBFT: libft/Makefile
+	@$(MAKE) -C libft FLAGS="$(CSTD) $(CFLAGS)" > /dev/null
 
 # Parallel builds must fetch both sets of headers before compiling our sources.
 $(OBJ): Makefile | mlx_linux/Makefile libft/Makefile
@@ -99,11 +90,14 @@ clean_mlx:
 		$(MAKE) -C mlx_linux clean > /dev/null; \
 	fi
 
-clean: clean_mlx
-	@printf "$(NOTVALID)Cleaning libft and object files\n$(RESET)"
+clean_libft:
+	@printf "$(NOTVALID)Cleaning libft\n$(RESET)"
 	+@if [ -f "libft/Makefile" ]; then \
 		$(MAKE) -C libft clean > /dev/null; \
 	fi
+
+clean: clean_mlx clean_libft
+	@printf "$(NOTVALID)Cleaning object files\n$(RESET)"
 	@rm -f $(OBJ) $(OBJ:.o=.d)
 
 fclean: clean
@@ -112,7 +106,7 @@ fclean: clean
 
 # Explicitly requested full dependency removal, never part of ordinary clean.
 aclean: fclean
-	@rm -rf mlx_linux libft
+	@rm -rf mlx_linux
 
 re:
 	@$(MAKE) fclean
